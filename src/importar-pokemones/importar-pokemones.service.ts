@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ListaPokemon } from './dto/lista-pokemon.interface';
 import { PokemonDetalle } from './dto/pokemon-detalles.interface';
 import { PokeonSpecies } from './dto/pokemon-species.interface';
@@ -6,12 +6,24 @@ import { PrismaService } from 'src/prisma/prisma.service';
 // import { pokemon } from '../../dist/generated/prisma/models/pokemon';
 
 @Injectable()
-export class ImportarPokemonesService {
+export class ImportarPokemonesService implements OnModuleInit {
 
-  private readonly BASE_URL = 'https://pokeapi.co/api/v2'
+  private readonly BASE_URL = 'https://pokeapi.co/api/v2';
+
+  private readonly logger = new Logger(ImportarPokemonesService.name)
 
   constructor(private prisma: PrismaService) {
 
+  }
+  async onModuleInit() {
+    const count = await this.prisma.pokemon.count();
+    if (count === 0) {
+      this.logger.log('No hay pokemones en la base de datos. Importando...')
+      await this.importar();
+      this.logger.log('Importación completada')
+    } else {
+      this.logger.log(`Se econtraron ${count} pokemones`)
+    }
   }
 
   async importar() {

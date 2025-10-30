@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
   moduleFormat = "cjs"
 }
 
@@ -28,4 +28,10 @@ model tipo_pokemon {
   id        Int       @id @default(autoincrement())
   nombre    String    @unique @db.VarChar(255)
   pokemones pokemon[]
+}
+
+model user {
+  id       Int    @id @default(autoincrement())
+  username String @db.VarChar(255)
+  password String @db.VarChar(255)
 }

@@ -1,26 +1,75 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Pokemon } from './entities/pokemon.entity';
+import { PokemonDto } from './dto/pokemon.dto copy';
 
 @Injectable()
 export class PokemonService {
-  create(createPokemonDto: CreatePokemonDto) {
-    return 'This action adds a new pokemon';
+
+  constructor(
+    private readonly prisma: PrismaService
+  ) { }
+
+  create(data: CreatePokemonDto): Promise<Pokemon> {
+    try {
+      return this.prisma.pokemon.create({
+        data
+      })
+    } catch (error) {
+      throw error
+    }
   }
 
-  findAll() {
-    return `This action returns all pokemon`;
+  findAll(): Promise<Pokemon[]> {
+    try {
+      return this.prisma.pokemon.findMany()
+    } catch (error) {
+      throw error
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} pokemon`;
+  findOne(id: number): Promise<PokemonDto | null> {
+    try {
+      return this.prisma.pokemon.findUnique({
+        where: {
+          id
+        },
+        include: {
+          tipoPokemon: true
+        }
+      })
+    } catch (error) {
+      throw error
+    }
   }
 
-  update(id: number, updatePokemonDto: UpdatePokemonDto) {
-    return `This action updates a #${id} pokemon`;
+  update(id: number, data: UpdatePokemonDto): Promise<Pokemon | null> {
+    try {
+      return this.prisma.pokemon.update({
+        where: {
+          id
+        },
+        data
+      })
+    } catch (error) {
+      throw error
+    }
   }
 
   remove(id: number) {
-    return `This action removes a #${id} pokemon`;
+    try {
+      return this.prisma.pokemon.delete({
+        where: {
+          id
+        },
+      })
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(`No se encontro el pokemon con id: ${id}`);
+      }
+      throw error;
+    }
   }
 }
