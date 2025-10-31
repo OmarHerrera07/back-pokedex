@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { apiReference } from '@scalar/nestjs-api-reference';
 import { ValidationPipe } from '@nestjs/common';
 import { LogginInterceptor } from './shared/interceptores/loggin.interceptor';
+import { PokedexLoggerMiddleware } from './PokedexLogger/pokedex-logger.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,6 +17,8 @@ async function bootstrap() {
     })
   )
 
+
+  app.use(new PokedexLoggerMiddleware().use);
   // app.useGlobalInterceptors(new LogginInterceptor());
 
   const config = new DocumentBuilder()
