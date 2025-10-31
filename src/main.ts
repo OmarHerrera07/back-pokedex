@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { apiReference } from '@scalar/nestjs-api-reference';
 import { ValidationPipe } from '@nestjs/common';
+import { LogginInterceptor } from './shared/interceptores/loggin.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +15,8 @@ async function bootstrap() {
       forbidNonWhitelisted: true
     })
   )
+
+  // app.useGlobalInterceptors(new LogginInterceptor());
 
   const config = new DocumentBuilder()
   .setTitle('Pokedex')
