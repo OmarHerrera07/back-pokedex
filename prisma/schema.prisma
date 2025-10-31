@@ -22,6 +22,7 @@ model pokemon {
   defensaEspecial Int            @map("defensa_especial")
   velocidad       Int
   tipoPokemon     tipo_pokemon[]
+  usuariosFavoritos usuario[] @relation("favoritos")
 }
 
 model tipo_pokemon {
@@ -33,5 +34,8 @@ model tipo_pokemon {
 model usuario{
   id Int @id @default(autoincrement())
   username    String    @unique @db.VarChar(25)
-  contrasena String     @db.VarChar(50)
+  contrasena String     @db.VarChar(255)
+  favoritos pokemon[] @relation("favoritos")
 }
+
+

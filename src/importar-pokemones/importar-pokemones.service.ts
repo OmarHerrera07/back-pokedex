@@ -37,7 +37,7 @@ export class ImportarPokemonesService implements OnModuleInit{
       }
 
       const pokemones = (await response.json()) as ListaPokemon;
-
+      console.log(pokemones);
       const detalles = await Promise.allSettled(
         pokemones.results.map(async ({ url }) => {
           const res = await fetch(`${url.endsWith('/') ? url.slice(0, -1) : url}`)
@@ -112,7 +112,7 @@ export class ImportarPokemonesService implements OnModuleInit{
       await this.prisma.pokemon.create({
         data: {
           id: pokemon.id,
-          nombre: pokemon.cries.latest,
+          nombre: pokemon.name,
           descripcion,
           grunido: pokemon.cries.latest,
           imagen,
