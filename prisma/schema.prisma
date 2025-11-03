@@ -23,6 +23,8 @@ model pokemon {
   velocidad       Int
   tipoPokemon     tipo_pokemon[]
   usuariosFavoritos usuario[] @relation("favoritos")
+
+  usuarioEquipo usuario[] @relation("equipo")
 }
 
 model tipo_pokemon {
@@ -36,6 +38,8 @@ model usuario{
   username    String    @unique @db.VarChar(25)
   contrasena String     @db.VarChar(255)
   favoritos pokemon[] @relation("favoritos")
+  equipo pokemon[] @relation("equipo")
 }
+
 
 

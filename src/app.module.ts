@@ -5,13 +5,14 @@ import { PrismaService } from './prisma/prisma.service';
 import { ConfigModule } from '@nestjs/config';
 import { UsuarioModule } from './usuario/usuario.module';
 import { LogginInterceptor } from './shared/interceptores/loggin.interceptor';
+import { EquipoModule } from './equipo/equipo.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true
     }),
-    PokemonModule, ImportarPokemonesModule, UsuarioModule],
+    PokemonModule, ImportarPokemonesModule, UsuarioModule, EquipoModule],
   controllers: [],
   providers: [PrismaService, 
     {
