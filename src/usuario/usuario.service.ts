@@ -99,4 +99,17 @@ export class UsuarioService {
   }
 
 
+  async findByUsername(username: string): Promise<Usuario | null> { // 
+    try {
+      return await this.prisma.usuario.findUnique({
+        where: {
+          username
+        }
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
 }
