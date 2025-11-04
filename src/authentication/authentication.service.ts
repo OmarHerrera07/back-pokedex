@@ -39,7 +39,7 @@ export class AuthenticationService {
 
     const secret = this.config.get("JWT-_SECRET");
     const expiresIn = this.config.get("JWT_EXPIRES_IN");
-    const refshSecret = this.config.get("JWT_REFRESH_SECRET");
+    const refreshSecret = this.config.get("JWT_REFRESH_SECRET");
     const expiresRefresh = this.config.get("JWT_REFRESH_EXPIRES_INECRET");
     const environment = this.config.get("NODE_ENV");
 
@@ -54,6 +54,12 @@ export class AuthenticationService {
       secure: environment === 'production', 
       // maxAge: ms(expiresIn as StringValue)
       maxAge: ms(`${expiresIn}`)
+    });
+
+
+    const refresh = this.jwtService.sign(payload, {
+      secret: refreshSecret,
+      expiresIn: expiresRefresh
     });
 
     return { payload }
