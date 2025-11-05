@@ -8,13 +8,17 @@ import { LogginInterceptor } from './shared/interceptores/loggin.interceptor';
 import { EquipoModule } from './equipo/equipo.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { JwtAuthGuard } from './authentication/guard/jwt.guard';
+import { validate } from './configuration/env.validation'
+import { ConfigurationModule } from './configuration/configuration.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
+      cache: true,
+      validate,
     }),
-    PokemonModule, ImportarPokemonesModule, UsuarioModule, EquipoModule, AuthenticationModule],
+    PokemonModule, ImportarPokemonesModule, UsuarioModule, EquipoModule, AuthenticationModule, ConfigurationModule],
   controllers: [],
   providers: [PrismaService, 
     {

@@ -6,7 +6,7 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 import { Payload } from "../interface/payload.interface";
 
 @Injectable()
-export class LocalStrategy extends PassportStrategy(Strategy){
+export class JwtStrategy extends PassportStrategy(Strategy){
 
     constructor( private config: ConfigService ){
         super({

@@ -9,7 +9,7 @@ export class AuthenticationController {
 
   // login
   @UseGuards(LocalAuthGuard)
-  @Post()
+  @Post("/login")
   async login(@Request() req,@Res({ passthrough: true}) response: Response){
     return this.authenticationService.login(req.user, response)
   }

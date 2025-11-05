@@ -5,20 +5,20 @@ import { CreateUsuarioDto } from "src/usuario/dto/create-usuario.dto";
 @Injectable()
 export class EquipoService {
 // TODO REGISTRAR EQUIPO
-  constructor(private readonly prisma: PrismaService){}
+  // constructor(private readonly prisma: PrismaService){}
 
-  async create(data: CreateUsuarioDto) {
-      try {
+  // async create(data: CreateUsuarioDto) {
+      // try {
 
-        // return await this.prisma.usuario.create({
-        //     data
-        // });
-      } catch (error) {
-        if(error.code === 'P2002') {
-          throw new ConflictException(`Error: Usuario existente! : ${data.username}`);
-        }
+      //   // return await this.prisma.usuario.create({
+      //   //     data
+      //   // });
+      // } catch (error) {
+      //   if(error.code === 'P2002') {
+      //     throw new ConflictException(`Error: Usuario existente! : ${data.username}`);
+      //   }
           
-      }
-  }
+      // }
+  // }
 
 }
