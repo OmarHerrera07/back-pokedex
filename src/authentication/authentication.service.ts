@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsuarioService } from 'src/usuario/usuario.service';
 import * as argon2 from 'argon2';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
@@ -62,6 +62,52 @@ export class AuthenticationService {
       expiresIn: expiresRefresh
     });
 
+    // insertar cookie en el response
+    response.cookie('Refresh', refresh, {
+      httpOnly: true,
+      secure: environment === 'production',
+      maxAge: ms(`${expiresIn}`),
+      path: '/authentication/refresh'
+    });
+
+    return { payload }
+  }
+
+  async refresh (payload: Payload, response: Response){
+
+    const secret = this.config.get("JWT-_SECRET");
+    const expiresIn = this.config.get("JWT_EXPIRES_IN");
+    const refreshSecret = this.config.get("JWT_REFRESH_SECRET");
+    const expiresRefresh = this.config.get("JWT_REFRESH_EXPIRES_INECRET");
+    const environment = this.config.get("NODE_ENV");
+
+    const token = this.jwtService.sign(payload, {
+      secret,
+      expiresIn
+    });
+
+    // insertar cookie en el response
+    response.cookie('Authentication', token, {
+      httpOnly: true,
+      secure: environment === 'production', 
+      // maxAge: ms(expiresIn as StringValue)
+      maxAge: ms(`${expiresIn}`)
+    });
+
+
+    const refresh = this.jwtService.sign(payload, {
+      secret: refreshSecret,
+      expiresIn: expiresRefresh
+    });
+
+    // insertar cookie en el response
+    response.cookie('Refresh', refresh, {
+      httpOnly: true,
+      secure: environment === 'production',
+      maxAge: ms(`${expiresIn}`),
+      path: '/authentication/refresh'
+    });
+
     return { payload }
   }
 
@@ -73,23 +119,21 @@ export class AuthenticationService {
     }
   }
 
-  // create(createAuthenticationDto: CreateAuthenticationDto) {
-  //   return 'This action adds a new authentication';
-  // }
 
-  // findAll() {
-  //   return `This action returns all authentication`;
-  // }
+  async validateUserRefreshToken(id: number, token: string): Promise<Usuario | null>{
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} authentication`;
-  // }
+    const usuario = await this.usuarioService.findOne(id);
 
-  // update(id: number, updateAuthenticationDto: UpdateAuthenticationDto) {
-  //   return `This action updates a #${id} authentication`;
-  // }
+    if(usuario){
+      throw new UnauthorizedException();
+    }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} authentication`;
-  // }
+    if(this.jwtService.verify(token)){
+      return usuario;
+    }
+
+    return null
+
+  }
+ 
 }
